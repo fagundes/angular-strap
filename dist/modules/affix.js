@@ -1,6 +1,6 @@
 /**
  * angular-strap
- * @version v2.2.4 - 2015-05-28
+ * @version v2.2.4 - 2015-06-07
  * @link http://mgcrea.github.io/angular-strap
  * @author Olivier Louvignes <olivier@mg-crea.com> (https://github.com/mgcrea)
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -31,7 +31,6 @@ angular.module('mgcrea.ngStrap.affix', [ 'mgcrea.ngStrap.helpers.dimensions', 'm
         }
       }
       $affix.init = function() {
-        this.$parseOffsets();
         initialOffsetTop = dimensions.offset(element[0]).top + initialAffixTop;
         setWidth = !element[0].style.width;
         targetEl.on('scroll', this.checkPosition);
@@ -49,6 +48,7 @@ angular.module('mgcrea.ngStrap.affix', [ 'mgcrea.ngStrap.helpers.dimensions', 'm
         setTimeout($affix.checkPosition, 1);
       };
       $affix.checkPosition = function() {
+        $affix.$parseOffsets();
         var scrollTop = getScrollTop();
         var position = dimensions.offset(element[0]);
         var elementHeight = dimensions.height(element[0]);
@@ -76,7 +76,9 @@ angular.module('mgcrea.ngStrap.affix', [ 'mgcrea.ngStrap.helpers.dimensions', 'm
           }
           if (options.inlineStyles) {
             element.css('position', options.offsetParent ? '' : 'relative');
-            element.css('top', options.offsetParent ? '' : bodyEl[0].offsetHeight - offsetBottom - elementHeight - initialOffsetTop + 'px');
+            element.offset({
+              top: options.offsetParent ? '' : getScrollHeight() - offsetBottom - elementHeight
+            });
           }
         } else {
           unpin = null;

@@ -47,7 +47,6 @@ angular.module('mgcrea.ngStrap.affix', ['mgcrea.ngStrap.helpers.dimensions', 'mg
 
         $affix.init = function() {
 
-          this.$parseOffsets();
           initialOffsetTop = dimensions.offset(element[0]).top + initialAffixTop;
           setWidth = !element[0].style.width;
 
@@ -82,6 +81,9 @@ angular.module('mgcrea.ngStrap.affix', ['mgcrea.ngStrap.helpers.dimensions', 'mg
 
         $affix.checkPosition = function() {
           // if (!this.$element.is(':visible')) return
+
+          //parse offsets whenever check position
+          $affix.$parseOffsets();
 
           var scrollTop = getScrollTop();
           var position = dimensions.offset(element[0]);
@@ -120,7 +122,8 @@ angular.module('mgcrea.ngStrap.affix', ['mgcrea.ngStrap.helpers.dimensions', 'mg
             }
             if (options.inlineStyles) {
               element.css('position', (options.offsetParent) ? '' : 'relative');
-              element.css('top', (options.offsetParent) ? '' : ((bodyEl[0].offsetHeight - offsetBottom - elementHeight - initialOffsetTop) + 'px'));
+              element.offset({ top: options.offsetParent ? '' : (getScrollHeight() - offsetBottom - elementHeight) });
+              // element.css('top', (options.offsetParent) ? '' : ((bodyEl[0].offsetHeight - offsetBottom - elementHeight - initialOffsetTop) + 'px'));
             }
           } else { // affix === 'middle'
             unpin = null;
